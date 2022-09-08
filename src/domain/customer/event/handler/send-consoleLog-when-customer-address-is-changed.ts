@@ -3,8 +3,8 @@ import { CustomerAddressChanged } from "../../../customer/event/customer-address
 
 export default class SendConsoleLogWhenCustomerAddressChanged implements IEventHandler<CustomerAddressChanged>{
     handle(event: CustomerAddressChanged): void {
-        console.log(`Endereço do cliente: 
+        /*console.log(`Endereço do cliente: 
         ${event.eventData.id}, 
-        ${event.eventData.name} alterado para: ${event.eventData.address.toString()}`)
+        ${event.eventData.name} alterado para: ${event.eventData.address.toString()}`)*/
     }
 }
