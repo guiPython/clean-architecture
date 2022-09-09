@@ -1,7 +1,9 @@
+import { Sequelize } from "sequelize-typescript";
 import Address from "../../../domain/customer/entity/address";
 import CustomerFactory from "../../../domain/customer/factory/customer.factory";
-import { UpdateCustomerUseCase } from "./update.customer"
-import ICustomerRepository from "../../../domain/customer/repository/customer-repository";
+import CustomerModel from "../../../infrastructure/customer/repository/sequelize/customer.model";
+import CustomerRepository from "../../../infrastructure/customer/repository/sequelize/customer.repository";
+import { UpdateCustomerUseCase } from "./update.customer";
 import { InputUpdateCustomer, OutputUpdateCustomer } from "./update.customer.dto";
 
 const customerMock = CustomerFactory.createWithAddress("Rafael",
@@ -10,20 +12,25 @@ const customerMock = CustomerFactory.createWithAddress("Rafael",
 const customerUpdatedMock = CustomerFactory.createWithAddress("André",
                     new Address("Rua 8", 64, "8545496-8956", "Rio de Janeiro"))
 
+describe("Integration Test update customer use case", () => {
+    let sequelize: Sequelize;
+    beforeEach(async () => {
+        sequelize = new Sequelize({
+            dialect: "sqlite",
+            storage: ":memory:",
+            logging: false,
+            sync: {force: true}
+        });
 
-const Repository = (): ICustomerRepository => {
-    return {
-        find: jest.fn(),
-        findAll: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn()
-    }
-}
+        sequelize.addModels([CustomerModel]);
+        await sequelize.sync();
+    });
+    afterEach(async () => {
+        await sequelize.close();
+    });
 
-describe("Unit Test update customer use case", () => {
     it("should update a customer", async () => {
-        const repository = Repository();
-        repository.find = jest.fn().mockReturnValue(Promise.resolve(customerMock))
+        const repository = new CustomerRepository();
 
         const input: InputUpdateCustomer = {
             id: customerMock.Id,
@@ -63,7 +70,7 @@ describe("Unit Test update customer use case", () => {
             }
         }
 
-        const repository = Repository();
+        const repository = new CustomerRepository();
         expect(async () => {await new UpdateCustomerUseCase(repository).execute(input)}).rejects.toThrow("Name is required");
     });
 
@@ -78,7 +85,7 @@ describe("Unit Test update customer use case", () => {
                 zip: customerUpdatedMock.Address.Zipcode
             }
         }
-        const repository = Repository();
+        const repository = new CustomerRepository();
         expect(async () => {await new UpdateCustomerUseCase(repository).execute(input)}).rejects.toThrow("Street is required");
     });
 });
