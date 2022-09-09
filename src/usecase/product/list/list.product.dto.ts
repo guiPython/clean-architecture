@@ -1,4 +1,4 @@
-export class InputListProductsUseCase {}
+export class InputListProducts {}
 
 type Product = {
     id: string;
@@ -6,6 +6,6 @@ type Product = {
     price: number
 }
 
-export class OutputListProductsUseCase {
+export class OutputListProducts {
     products: Product[];
 }
