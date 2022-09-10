@@ -47,7 +47,9 @@ describe("Unit Test update product use case", () => {
         repository.find = jest.fn().mockReturnValue(Promise.resolve(
             new Product("111", "Aleatório", 20)
         ))
-        expect(async () => {await new UpdateProductUseCase(repository).execute(input)}).rejects.toThrow("Name is required");
+        expect(async () => {
+            await new UpdateProductUseCase(repository).execute(input)
+        }).rejects.toThrow("product: Name is required");
     });
 
     it("should throw error when product price is invalid", async () => {
@@ -60,6 +62,8 @@ describe("Unit Test update product use case", () => {
         repository.find = jest.fn().mockReturnValue(Promise.resolve(
             new Product("111", "Aleatório", 20)
         ))
-        expect(async () => {await new UpdateProductUseCase(repository).execute(input)}).rejects.toThrow("Price must be greater than 0");
+        expect(async () => {
+            await new UpdateProductUseCase(repository).execute(input)
+        }).rejects.toThrow("product: Price must be greater than 0");
     });
 });
