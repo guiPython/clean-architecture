@@ -7,4 +7,8 @@ export default abstract class Entity {
     constructor() {
         this.notification = new Notification();
     }
+
+    get Notification(): Notification{
+        return this.notification;
+    }
 }
