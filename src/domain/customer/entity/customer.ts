@@ -21,6 +21,9 @@ export default class Customer extends Entity{
                 message: "Name is required"
             });
         } 
+        if(this.notification.hasErrors()) {
+            throw new NotificationError(this.notification.Errors);
+        }
     }
 
     constructor(id: string, name: string){
@@ -28,10 +31,6 @@ export default class Customer extends Entity{
         this.id = id;
         this._name = name;
         this.validate()
-
-        if(this.notification.hasErrors()) {
-            throw new NotificationError(this.notification.Errors);
-        }
     }
 
     get Id(): string{
